@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dr. Lijun "Lizzie" Chen — App State CIS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #FFCC00;
+    --gold-dark: #E6B800;
+    --black: #1a1a1a;
+    --off-black: #111111;
+    --white: #FAFAF7;
+    --gray: #444444;
+    --light-gray: #f0efe9;
+    --border: rgba(255,204,0,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--off-black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5%;
+    background: rgba(17,17,17,0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: var(--gold); letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a {
+    font-size: 13px; font-weight: 400; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(250,250,247,0.65);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 5% 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(255,204,0,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: linear-gradient(var(--gold) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--gold) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .hero-content { position: relative; max-width: 800px; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 28px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 32px; height: 1px; background: var(--gold);
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(42px, 7vw, 80px);
+    line-height: 1.05; color: var(--white);
+    margin-bottom: 8px;
+  }
+  h1 em {
+    font-style: italic; color: var(--gold);
+  }
+
+  .hero-title {
+    font-size: clamp(14px, 2vw, 17px); font-weight: 300;
+    color: rgba(250,250,247,0.55); letter-spacing: 0.05em;
+    margin-bottom: 32px; line-height: 1.7;
+  }
+
+  .hero-desc {
+    font-size: 15px; line-height: 1.8;
+    color: rgba(250,250,247,0.7);
+    max-width: 520px; margin-bottom: 44px;
+  }
+
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 13px 28px; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: var(--gold); color: var(--black);
+    border: none; border-radius: 2px; cursor: pointer;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--gold-dark); transform: translateY(-1px); }
+  .btn-outline {
+    padding: 13px 28px; font-size: 13px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    background: transparent; color: var(--white);
+    border: 1px solid rgba(250,250,247,0.25); border-radius: 2px;
+    cursor: pointer; text-decoration: none; transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-1px); }
+
+  .hero-accent {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: clamp(200px, 35vw, 420px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.12; pointer-events: none;
+  }
+  .hero-accent svg { width: 100%; height: auto; }
+
+  /* SECTION SHARED */
+  section { padding: 100px 5%; }
+  .section-label {
+    font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-label::after {
+    content: ''; flex: 1; max-width: 40px;
+    height: 1px; background: var(--gold); opacity: 0.5;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 4vw, 44px);
+    color: var(--white); margin-bottom: 20px; line-height: 1.15;
+  }
+
+  /* ABOUT */
+  .about { background: var(--off-black); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: start; max-width: 1100px;
+  }
+  .about-text p {
+    font-size: 15px; line-height: 1.85;
+    color: rgba(250,250,247,0.68); margin-bottom: 18px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2px;
+    margin-top: 40px;
+  }
+  .stat-card {
+    background: rgba(255,204,0,0.05);
+    border: 1px solid var(--border);
+    padding: 24px; transition: background 0.2s;
+  }
+  .stat-card:hover { background: rgba(255,204,0,0.09); }
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px; color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px; font-weight: 400; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(250,250,247,0.45);
+  }
+
+  .about-info { }
+  .info-block {
+    border-left: 2px solid var(--border);
+    padding: 20px 0 20px 24px; margin-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .info-block:hover { border-left-color: var(--gold); }
+  .info-key {
+    font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 6px; font-weight: 500;
+  }
+  .info-val {
+    font-size: 15px; color: rgba(250,250,247,0.8); line-height: 1.5;
+  }
+
+  /* EXPERTISE */
+  .expertise { background: #111; }
+  .expertise-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2px; margin-top: 48px;
+  }
+  .exp-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,204,0,0.1);
+    padding: 32px 28px;
+    transition: background 0.2s, border-color 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .exp-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold); transform: scaleX(0);
+    transform-origin: left; transition: transform 0.3s;
+  }
+  .exp-card:hover::before { transform: scaleX(1); }
+  .exp-card:hover { background: rgba(255,204,0,0.05); border-color: rgba(255,204,0,0.25); }
+  .exp-icon {
+    font-size: 28px; margin-bottom: 16px; display: block;
+  }
+  .exp-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px; color: var(--white); margin-bottom: 10px;
+  }
+  .exp-desc {
+    font-size: 13px; line-height: 1.7;
+    color: rgba(250,250,247,0.5);
+  }
+
+  /* CONTACT */
+  .contact { background: var(--off-black); }
+  .contact-inner {
+    max-width: 700px;
+    border: 1px solid var(--border);
+    padding: 60px; position: relative; overflow: hidden;
+  }
+  .contact-inner::after {
+    content: ''; position: absolute;
+    bottom: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(255,204,0,0.1), transparent 70%);
+    pointer-events: none;
+  }
+  .contact-inner p {
+    font-size: 15px; line-height: 1.8;
+    color: rgba(250,250,247,0.6); margin-bottom: 32px;
+  }
+  .contact-links { display: flex; flex-direction: column; gap: 16px; }
+  .contact-link {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 14px; color: rgba(250,250,247,0.7);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .contact-link:hover { color: var(--gold); }
+  .contact-link-icon {
+    width: 36px; height: 36px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .contact-link:hover .contact-link-icon {
+    border-color: var(--gold); background: rgba(255,204,0,0.08);
+  }
+
+  /* FOOTER */
+  footer {
+    padding: 30px 5%;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+  }
+  footer p { font-size: 12px; color: rgba(250,250,247,0.3); }
+  .appstate-badge {
+    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow { animation: fadeUp 0.6s ease both; }
+  h1            { animation: fadeUp 0.6s 0.1s ease both; }
+  .hero-title   { animation: fadeUp 0.6s 0.2s ease both; }
+  .hero-desc    { animation: fadeUp 0.6s 0.3s ease both; }
+  .hero-ctas    { animation: fadeUp 0.6s 0.4s ease both; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-accent { display: none; }
+    .contact-inner { padding: 36px 28px; }
+    .nav-links { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Dr. Lizzie Chen</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#expertise">Research</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Appalachian State University</div>
+    <h1>Lijun <em>"Lizzie"</em><br>Chen</h1>
+    <p class="hero-title">Assistant Professor · Department of Computer Information Systems<br>Walker College of Business</p>
+    <p class="hero-desc">Advancing the intersection of technology, data, and business intelligence. Dedicated to rigorous research and empowering the next generation of CIS professionals in the Appalachian mountains and beyond.</p>
+    <div class="hero-ctas">
+      <a href="#about" class="btn-primary">Learn More</a>
+      <a href="#contact" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+  <div class="hero-accent">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="200" cy="200" r="180" stroke="#FFCC00" stroke-width="1"/>
+      <circle cx="200" cy="200" r="130" stroke="#FFCC00" stroke-width="1"/>
+      <circle cx="200" cy="200" r="80" stroke="#FFCC00" stroke-width="1"/>
+      <line x1="20" y1="200" x2="380" y2="200" stroke="#FFCC00" stroke-width="1"/>
+      <line x1="200" y1="20" x2="200" y2="380" stroke="#FFCC00" stroke-width="1"/>
+      <line x1="73" y1="73" x2="327" y2="327" stroke="#FFCC00" stroke-width="0.5"/>
+      <line x1="327" y1="73" x2="73" y2="327" stroke="#FFCC00" stroke-width="0.5"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <div class="section-label">About</div>
+      <h2 class="section-title">Educator,<br>Researcher &amp; Scholar</h2>
+      <p>Dr. Lijun "Lizzie" Chen is an Assistant Professor in the Department of Computer Information Systems at Appalachian State University's Walker College of Business, located in Boone, North Carolina.</p>
+      <p>Her work bridges the fields of information systems, data analytics, and business technology, contributing both to academic scholarship and practical applications in the rapidly evolving digital landscape.</p>
+      <p>Dr. Chen is committed to fostering an inclusive and intellectually stimulating learning environment where students develop critical thinking and technical skills to thrive in the modern workforce.</p>
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">CIS</div>
+          <div class="stat-label">Department</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">WCB</div>
+          <div class="stat-label">Walker College of Business</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">App</div>
+          <div class="stat-label">State University</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">NC</div>
+          <div class="stat-label">Boone, North Carolina</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-info">
+      <div class="section-label">Details</div>
+      <div class="info-block">
+        <div class="info-key">Position</div>
+        <div class="info-val">Assistant Professor</div>
+      </div>
+      <div class="info-block">
+        <div class="info-key">Department</div>
+        <div class="info-val">Computer Information Systems</div>
+      </div>
+      <div class="info-block">
+        <div class="info-key">College</div>
+        <div class="info-val">Walker College of Business</div>
+      </div>
+      <div class="info-block">
+        <div class="info-key">Institution</div>
+        <div class="info-val">Appalachian State University</div>
+      </div>
+      <div class="info-block">
+        <div class="info-key">Location</div>
+        <div class="info-val">Boone, North Carolina</div>
+      </div>
+      <div class="info-block">
+        <div class="info-key">Also known as</div>
+        <div class="info-val">"Lizzie"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERTISE -->
+<section class="expertise" id="expertise">
+  <div class="section-label">Focus Areas</div>
+  <h2 class="section-title">Research &amp; Teaching</h2>
+  <div class="expertise-grid">
+    <div class="exp-card">
+      <span class="exp-icon">🖥</span>
+      <div class="exp-title">Information Systems</div>
+      <p class="exp-desc">Exploring how organizations design, implement, and manage information technology to achieve strategic business objectives.</p>
+    </div>
+    <div class="exp-card">
+      <span class="exp-icon">📊</span>
+      <div class="exp-title">Data Analytics</div>
+      <p class="exp-desc">Applying quantitative and computational methods to extract insight from complex datasets in business and organizational contexts.</p>
+    </div>
+    <div class="exp-card">
+      <span class="exp-icon">🤖</span>
+      <div class="exp-title">Emerging Technologies</div>
+      <p class="exp-desc">Investigating how AI, machine learning, and digital transformation are reshaping business processes and decision-making.</p>
+    </div>
+    <div class="exp-card">
+      <span class="exp-icon">🎓</span>
+      <div class="exp-title">Teaching &amp; Mentorship</div>
+      <p class="exp-desc">Passionate about student success, curriculum development, and preparing CIS graduates for careers in a technology-driven world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="section-label">Connect</div>
+  <h2 class="section-title">Get in Touch</h2>
+  <div class="contact-inner">
+    <p>Whether you're a student, colleague, or prospective collaborator, Dr. Chen welcomes inquiries about her research, courses, or opportunities for academic partnership.</p>
+    <div class="contact-links">
+      <a class="contact-link" href="mailto:chenl5@appstate.edu">
+        <div class="contact-link-icon">✉</div>
+        chenl5@appstate.edu
+      </a>
+      <a class="contact-link" href="https://www.appstate.edu" target="_blank">
+        <div class="contact-link-icon">🏔</div>
+        Appalachian State University — Boone, NC 28608
+      </a>
+      <a class="contact-link" href="#">
+        <div class="contact-link-icon">📄</div>
+        Department of Computer Information Systems
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Dr. Lijun "Lizzie" Chen · Appalachian State University</p>
+  <div class="appstate-badge">Go Mountaineers ⬛🟡</div>
+</footer>
+
+</body>
+</html>
